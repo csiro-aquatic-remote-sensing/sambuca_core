@@ -7,7 +7,7 @@ little bit helps, and credit will always be given.
 Bug reports
 -----------
 
-When `reporting a bug <https://yourprojecturl/issues>`_ please include:
+When `reporting a bug <https://github.com/csiro-aquatic-remote-sensing/sambuca_core/issues>`_ please include:
 
     * Your operating system name and version.
     * Any details about your local setup that might be helpful in troubleshooting.
@@ -30,7 +30,7 @@ Sambuca Core could always use more documentation, whether as part of the officia
 Feature requests and feedback
 -----------------------------
 
-The best way to send feedback is to `file an issue <https://yourprojecturl/issues>`_
+The best way to send feedback is to `file an issue <https://github.com/csiro-aquatic-remote-sensing/sambuca_core/issues>`_
 
 If you are proposing a feature:
 
@@ -42,7 +42,6 @@ Or, implement the feature yourself and submit a pull request.
 
 Development
 -----------
-To set up Sambuca Core for local development:
 
 1. Fork the `sambuca_core` repo on GitHub.
 2. Clone your fork locally.
@@ -72,7 +71,7 @@ package version numbers. This ensures that the version number is correctly
 incremented in all required files. Please see the bumpversion documentation for
 usage instructions, and do not edit the version strings directly.
 
-.. note:: Sphinx requires a working LaTeX installation to build the documentation.
+.. note:: Sphinx requires a working LaTeX installation to build the pdf documentation.
 
 Pull Request Guidelines
 -----------------------

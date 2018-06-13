@@ -40,5 +40,5 @@ html_sidebars = {
 }
 html_short_title = '%s-%s' % (project, version)
 html_theme_options = {
-    #'githuburl': 'https://github.com/dc23/sambuca-core/'
+    'githuburl': 'https://github.com/csiro-aquatic-remote-sensing/sambuca_core'
 }
