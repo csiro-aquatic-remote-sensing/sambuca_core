@@ -6,6 +6,13 @@
     :target: https://sambuca-core.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://img.shields.io/pypi/v/sambuca-core.svg
+    :target: https://pypi.org/project/sambuca-core
+    :alt: PyPI
+
+.. image:: https://img.shields.io/pypi/pyversions/sambuca-core.svg
+    :target: https://www.python.org
+
 * **Free software:** CSIRO Open Source Software Licence Agreement
 * **Homepage:** https://github.com/csiro-aquatic-remote-sensing/sambuca_core
 * **Documentation:** https://sambuca-core.readthedocs.io/en/latest/

@@ -51,13 +51,16 @@ Changelog
 * updated changelog.
 
 1.3.2 (Wednesday June 13, 2018)
-------------------
+-------------------------------
 * Minor documentation fixes.
 * Setup Travis CI integration.
 * Completed Read the Docs integration.
 * Removed Python 3.4 from CI, as it is not supported by pandas.
 
 1.3.3 (Wednesday June 13, 2018)
-------------------
+-------------------------------
 * Updating setup.py metadata
 * First version pushed to PyPI
+
+1.3.4 ()
+* Minor documentation fixes. I really need another pair of eyes to proof-read.

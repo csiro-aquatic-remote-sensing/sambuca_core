@@ -39,6 +39,3 @@ html_sidebars = {
    '**': ['searchbox.html', 'globaltoc.html', 'sourcelink.html'],
 }
 html_short_title = '%s-%s' % (project, version)
-html_theme_options = {
-    'githuburl': 'https://github.com/csiro-aquatic-remote-sensing/sambuca_core'
-}
