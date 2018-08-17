@@ -23,6 +23,7 @@ help:
 	echo '  * alldocs: builds all documentation formats.'
 	echo '  * sdist: builds a source distribution.'
 	echo '  * bdist_wheel: builds a universal wheel distribution.'
+	echo '  * upload: upload builds to PyPI.'
 
 .PHONY: test
 test:
