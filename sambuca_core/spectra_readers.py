@@ -122,7 +122,7 @@ def load_excel_spectral_library(filename, sheet_names=None, validate=True):
 
         for sheet in sheet_names:
             try:
-                dataframe = excel_file.parse(sheet)  # the sheet as a DataFrame
+                dataframe = excel_file.parse(sheet, index_col=0)  # the sheet as a DataFrame
                 # OK, we have the data frame. Let's process it...
                 if validate and not _validate_spectra_dataframe(dataframe):
                     continue
