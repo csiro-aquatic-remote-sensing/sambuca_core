@@ -32,7 +32,7 @@ class PyTest(TestCommand):
 
 setup(
     name="sambuca-core",
-    version="1.3.3",
+    version="1.3.4",
     description="""Core model components for the Semi-Analytical Model
 for Bathymetry, Un-mixing, and Concentration Assessment (SAMBUCA).""",
     long_description=long_description,

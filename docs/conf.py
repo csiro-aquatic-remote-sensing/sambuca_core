@@ -30,7 +30,7 @@ source_suffix = ".rst"
 master_doc = "index"
 project = u"Sambuca Core"
 copyright = u"2014, CSIRO"
-version = release = "1.3.3"
+version = release = "1.3.4"
 pygments_style = "perldoc"
 templates_path = ["."]
 html_use_smartypants = True
