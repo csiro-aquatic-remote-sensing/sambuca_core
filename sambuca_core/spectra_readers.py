@@ -2,11 +2,7 @@
 """ Contains functions for loading collections of spectra from Sambuca
 spectral database directories. """
 
-from __future__ import (
-    absolute_import,
-    division,
-    print_function,
-    unicode_literals)
+from __future__ import absolute_import, division, print_function, unicode_literals
 from builtins import *
 
 import os
@@ -19,6 +15,7 @@ import xlrd
 
 from .exceptions import UnsupportedDataFormatError, DataValidationError
 from .utility import list_files, strictly_increasing, merge_dictionary
+
 
 def _validate_spectra_dataframe(spectra_dataframe):
     """ Internal function to validate a spectra data frame.
@@ -45,8 +42,9 @@ def _validate_spectra_dataframe(spectra_dataframe):
         return False
 
     # The dtype of every column needs to be a numpy-compatible number
-    if len(spectra_dataframe.select_dtypes(include=[np.number]).columns) \
-       != len(spectra_dataframe.columns):
+    if len(spectra_dataframe.select_dtypes(include=[np.number]).columns) != len(
+        spectra_dataframe.columns
+    ):
         return False
 
     return True
@@ -58,9 +56,10 @@ def _add_dataframe_spectra_to_dictionary(dataframe, base_name, dictionary=None):
     """
     dictionary = {} if not dictionary else dictionary
     for column in dataframe:
-        dictionary['{0}:{1}'.format(base_name.lower(), column)] = (
+        dictionary["{0}:{1}".format(base_name.lower(), column)] = (
             np.array(dataframe.index),
-            dataframe[column].values)
+            dataframe[column].values,
+        )
     return dictionary
 
 
@@ -85,13 +84,14 @@ def load_csv_spectral_library(filename, validate=True):
     """
     dataframe = pd.read_csv(filename, index_col=0)
     if validate and not _validate_spectra_dataframe(dataframe):
-        raise DataValidationError('{0} failed validation'.format(filename))
+        raise DataValidationError("{0} failed validation".format(filename))
 
     # if normalise:
     #     dataframe = _normalise_dataframe(dataframe)
 
     base_name, _ = os.path.splitext(os.path.basename(filename))
     return _add_dataframe_spectra_to_dictionary(dataframe, base_name)
+
 
 def load_excel_spectral_library(filename, sheet_names=None, validate=True):
     """ Loads a spectral library from an Excel file. Both new style XLSX and
@@ -131,21 +131,17 @@ def load_excel_spectral_library(filename, sheet_names=None, validate=True):
                 #     dataframe = _normalise_dataframe(dataframe)
 
                 all_spectra = _add_dataframe_spectra_to_dictionary(
-                    dataframe,
-                    base_name,
-                    all_spectra)
+                    dataframe, base_name, all_spectra
+                )
             except xlrd.biffh.XLRDError:
                 continue
             # except xlrd.biffh.XLRDError as xlrd_error:
-                # TODO: log warning about invalid sheet
+            # TODO: log warning about invalid sheet
 
     return all_spectra
 
 
-def load_envi_spectral_library(
-        directory,
-        base_filename,
-        validate=True):
+def load_envi_spectral_library(directory, base_filename, validate=True):
     """ Loads spectra from an ENVI spectral library.
 
     Args:
@@ -166,26 +162,27 @@ def load_envi_spectral_library(
     """
 
     full_filename = os.path.join(directory, base_filename)
-    file_pattern = '{0}.{1}'
+    file_pattern = "{0}.{1}"
 
     # load the spectral library
     try:
         spectral_library = envi.open(
-            file_pattern.format(full_filename, 'hdr'),
-            file_pattern.format(full_filename, 'lib'))
+            file_pattern.format(full_filename, "hdr"),
+            file_pattern.format(full_filename, "lib"),
+        )
     except spyfile.FileNotFoundError as exception:
         raise IOError(exception)
 
     # convert to a DataFrame for processing
     dataframe = pd.DataFrame(
-        spectral_library.spectra.transpose(),
-        index=spectral_library.bands.centers)
+        spectral_library.spectra.transpose(), index=spectral_library.bands.centers
+    )
     dataframe.columns = spectral_library.names
 
     if validate and not _validate_spectra_dataframe(dataframe):
         raise DataValidationError(
-            'Spectral library {0} failed validation'.format(
-                base_filename))
+            "Spectral library {0} failed validation".format(base_filename)
+        )
 
     # merge the spectra into a dictionary
     return _add_dataframe_spectra_to_dictionary(dataframe, base_filename)
@@ -220,7 +217,7 @@ def load_all_spectral_libraries(path, validate=True):
     new_spectra = {}
 
     # excel files
-    for file in list_files(path, ['xls', 'xlsx']):
+    for file in list_files(path, ["xls", "xlsx"]):
         try:
             new_spectra = load_excel_spectral_library(file, validate=validate)
         except UnsupportedDataFormatError:
@@ -231,7 +228,7 @@ def load_all_spectral_libraries(path, validate=True):
         merge_dictionary(all_spectra, new_spectra)
 
     # CSV files
-    for file in list_files(path, ['csv']):
+    for file in list_files(path, ["csv"]):
         try:
             new_spectra = load_csv_spectral_library(file, validate=validate)
         except UnsupportedDataFormatError:
@@ -242,13 +239,10 @@ def load_all_spectral_libraries(path, validate=True):
         merge_dictionary(all_spectra, new_spectra)
 
     # Spectral Libraries
-    for file in list_files(path, ['lib']):
+    for file in list_files(path, ["lib"]):
         try:
             base_name, _ = os.path.splitext(os.path.basename(file))
-            new_spectra = load_envi_spectral_library(
-                path,
-                base_name,
-                validate=validate)
+            new_spectra = load_envi_spectral_library(path, base_name, validate=validate)
         except UnsupportedDataFormatError:
             pass
             # except UnsupportedDataFormatError as ex:
@@ -292,16 +286,17 @@ def load_spectral_library(filename, validate=True):
     extension = extension[1:].lower()
 
     # excel
-    if extension in ['xls', 'xlsx']:
+    if extension in ["xls", "xlsx"]:
         return load_excel_spectral_library(filename, validate=validate)
     # CSV
-    if extension in ['csv']:
+    if extension in ["csv"]:
         return load_csv_spectral_library(filename, validate=validate)
     # ENVI Spectral Libraries
-    elif extension in ['hdr', 'lib']:
-        return load_envi_spectral_library(os.path.dirname(filename),
-                                          base_name,
-                                          validate=validate)
+    elif extension in ["hdr", "lib"]:
+        return load_envi_spectral_library(
+            os.path.dirname(filename), base_name, validate=validate
+        )
 
     raise UnsupportedDataFormatError(
-        'filename {0} is not a supported format'.format(filename))
+        "filename {0} is not a supported format".format(filename)
+    )

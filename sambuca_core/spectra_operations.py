@@ -3,11 +3,7 @@
 by the spectra readers.
 """
 
-from __future__ import (
-    absolute_import,
-    division,
-    print_function,
-    unicode_literals)
+from __future__ import absolute_import, division, print_function, unicode_literals
 from builtins import *
 
 import numpy as np
@@ -33,7 +29,7 @@ def spectra_find_common_wavelengths(*args):
 
         return common
     else:
-        raise ValueError('Invalid or insufficient arguments')
+        raise ValueError("Invalid or insufficient arguments")
 
 
 def spectra_apply_wavelength_mask(spectra, mask):
