@@ -49,7 +49,7 @@ class TestExcelSensorFilterLoading(object):
 
     def test_load_multiple_skips_invalid_and_missing_sheets(self):
         file = resource_filename(
-            sbc.__name__, "tests/data/sensor_filters/sensor_filters.xlsx"
+            sbc.__name__, "tests/data/sensor_filters/sensor_filters_invalid_tests.xlsx"
         )
         good_names = ["3_band_350_900", "5_band_400_800"]
         missing_names = ["Monty_Hall", "Monty_Python"]
@@ -60,6 +60,8 @@ class TestExcelSensorFilterLoading(object):
         )
 
         assert len(loaded_filters) == len(good_names)
+        for good_name in good_names:
+            assert good_name in loaded_filters
 
     def test_normalise(self):
         file = resource_filename(
@@ -150,6 +152,11 @@ class TestExcelSensorFilterLoading(object):
             assert len(expected) == len(actual)
             assert np.allclose(expected, actual)
             assert isinstance(actual, np.ndarray)
+
+    def test_invalid_spreadsheet(self):
+        file = resource_filename(
+            sbc.__name__, "tests/data/sensor_filters/sensor_filters_invalid_tests.xlsx"
+        )
 
 
 class TestSpectralLibrarySensorFilterLoading(object):

@@ -51,8 +51,7 @@ def _validate_filter_dataframe(filter_dataframe):
 
     wavelengths = filter_dataframe.index
 
-    # are the band-centre wavelengths strictly increasing?
-    if not strictly_increasing(wavelengths):
+    if not wavelengths.is_monotonic_increasing:
         return False
 
     # Are the wavelength spacings acceptable?
