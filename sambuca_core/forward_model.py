@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 """Semi-analytical Lee/Sambuca forward model. """
 
-from __future__ import (
-    absolute_import,
-    division,
-    print_function,
-    unicode_literals)
+from __future__ import absolute_import, division, print_function, unicode_literals
 from builtins import *
 import math
 from collections import namedtuple
@@ -14,31 +10,33 @@ import numpy as np
 
 from .constants import REFRACTIVE_INDEX_SEAWATER
 
-ForwardModelResults = namedtuple('ForwardModelResults',
-                                 [
-                                     'r_substratum',
-                                     'rrs',
-                                     'rrsdp',
-                                     'r_0_minus',
-                                     'rdp_0_minus',
-                                     'kd',
-                                     'kub',
-                                     'kuc',
-                                     'a',
-                                     'a_ph_star',
-                                     'a_cdom_star',
-                                     'a_nap_star',
-                                     'a_ph',
-                                     'a_cdom',
-                                     'a_nap',
-                                     'a_water',
-                                     'bb',
-                                     'bb_ph_star',
-                                     'bb_nap_star',
-                                     'bb_ph',
-                                     'bb_nap',
-                                     'bb_water',
-                                 ])
+ForwardModelResults = namedtuple(
+    "ForwardModelResults",
+    [
+        "r_substratum",
+        "rrs",
+        "rrsdp",
+        "r_0_minus",
+        "rdp_0_minus",
+        "kd",
+        "kub",
+        "kuc",
+        "a",
+        "a_ph_star",
+        "a_cdom_star",
+        "a_nap_star",
+        "a_ph",
+        "a_cdom",
+        "a_nap",
+        "a_water",
+        "bb",
+        "bb_ph_star",
+        "bb_nap_star",
+        "bb_ph",
+        "bb_nap",
+        "bb_water",
+    ],
+)
 """ A namedtuple containing the forward model results.
 
 Attributes:
@@ -83,33 +81,34 @@ Attributes:
 # in the Sambuca model are invalid according to Python conventions.
 # pylint: disable=invalid-name
 def forward_model(
-        chl,
-        cdom,
-        nap,
-        depth,
-        substrate1,
-        wavelengths,
-        a_water,
-        a_ph_star,
-        num_bands,
-        substrate_fraction=1,
-        substrate2=None,
-        a_cdom_slope=0.0168052,
-        a_nap_slope=0.00977262,
-        bb_ph_slope=0.878138,
-        bb_nap_slope=None,
-        lambda0cdom=550.0,
-        lambda0nap=550.0,
-        lambda0x=546.0,
-        x_ph_lambda0x=0.00157747,
-        x_nap_lambda0x=0.0225353,
-        a_cdom_lambda0cdom=1.0,
-        a_nap_lambda0nap=0.00433,
-        bb_lambda_ref=550,
-        water_refractive_index=REFRACTIVE_INDEX_SEAWATER,
-        theta_air=30.0,
-        off_nadir=0.0,
-        q_factor=np.pi):
+    chl,
+    cdom,
+    nap,
+    depth,
+    substrate1,
+    wavelengths,
+    a_water,
+    a_ph_star,
+    num_bands,
+    substrate_fraction=1,
+    substrate2=None,
+    a_cdom_slope=0.0168052,
+    a_nap_slope=0.00977262,
+    bb_ph_slope=0.878138,
+    bb_nap_slope=None,
+    lambda0cdom=550.0,
+    lambda0nap=550.0,
+    lambda0x=546.0,
+    x_ph_lambda0x=0.00157747,
+    x_nap_lambda0x=0.0225353,
+    a_cdom_lambda0cdom=1.0,
+    a_nap_lambda0nap=0.00433,
+    bb_lambda_ref=550,
+    water_refractive_index=REFRACTIVE_INDEX_SEAWATER,
+    theta_air=30.0,
+    off_nadir=0.0,
+    q_factor=np.pi,
+):
     """Semi-analytical Lee/Sambuca forward model.
 
     TODO: Extended description goes here.
@@ -168,28 +167,26 @@ def forward_model(
 
     # Sub-surface solar zenith angle in radians
     inv_refractive_index = 1.0 / water_refractive_index
-    theta_w = \
-        math.asin(inv_refractive_index * math.sin(math.radians(theta_air)))
+    theta_w = math.asin(inv_refractive_index * math.sin(math.radians(theta_air)))
 
     # Sub-surface viewing angle in radians
-    theta_o = \
-        math.asin(inv_refractive_index * math.sin(math.radians(off_nadir)))
+    theta_o = math.asin(inv_refractive_index * math.sin(math.radians(off_nadir)))
 
     # Calculate derived SIOPS, based on
     # Mobley, Curtis D., 1994: Radiative Transfer in natural waters.
     bb_water = (0.00194 / 2.0) * np.power(bb_lambda_ref / wavelengths, 4.32)
-    a_cdom_star = a_cdom_lambda0cdom * \
-        np.exp(-a_cdom_slope * (wavelengths - lambda0cdom))
-    a_nap_star = a_nap_lambda0nap * \
-        np.exp(-a_nap_slope * (wavelengths - lambda0nap))
+    a_cdom_star = a_cdom_lambda0cdom * np.exp(
+        -a_cdom_slope * (wavelengths - lambda0cdom)
+    )
+    a_nap_star = a_nap_lambda0nap * np.exp(-a_nap_slope * (wavelengths - lambda0nap))
 
     # Calculate backscatter
     backscatter = np.power(lambda0x / wavelengths, bb_ph_slope)
     # specific backscatter due to phytoplankton
     bb_ph_star = x_ph_lambda0x * backscatter
     # specific backscatter due to NAP
-     # If a bb_nap_slope value has been supplied, use it.
-     # Otherwise, reuse bb_ph_slope.
+    # If a bb_nap_slope value has been supplied, use it.
+    # Otherwise, reuse bb_ph_slope.
     if bb_nap_slope:
         backscatter = np.power(lambda0x / wavelengths, bb_nap_slope)
     bb_nap_star = x_nap_lambda0x * backscatter
@@ -208,8 +205,9 @@ def forward_model(
     # Calculate total bottom reflectance from the two substrates
     r_substratum = substrate1
     if substrate2 is not None:
-        r_substratum = substrate_fraction * substrate1 + \
-        (1. - substrate_fraction) * substrate2
+        r_substratum = (
+            substrate_fraction * substrate1 + (1.0 - substrate_fraction) * substrate2
+        )
 
     # TODO: what are u and kappa?
     kappa = a + bb
@@ -238,10 +236,11 @@ def forward_model(
 
     # Remotely sensed reflectance
     kappa_d = kappa * depth
-    rrs = (rrsdp *
-           (1.0 - np.exp(-(inv_cos_theta_w + du_column_scaled) * kappa_d)) +
-           ((1.0 / math.pi) * r_substratum *
-            np.exp(-(inv_cos_theta_w + du_bottom_scaled) * kappa_d)))
+    rrs = rrsdp * (1.0 - np.exp(-(inv_cos_theta_w + du_column_scaled) * kappa_d)) + (
+        (1.0 / math.pi)
+        * r_substratum
+        * np.exp(-(inv_cos_theta_w + du_bottom_scaled) * kappa_d)
+    )
 
     return ForwardModelResults(
         r_substratum=r_substratum,
@@ -267,6 +266,7 @@ def forward_model(
         bb_nap=bb_nap,
         bb_water=bb_water,
     )
+
 
 # pylint: enable=too-many-arguments
 # pylint: enable=invalid-name

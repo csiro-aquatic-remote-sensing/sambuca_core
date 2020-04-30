@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 """ Contains functions for working with Sensor Filters. """
 
-from __future__ import (
-    absolute_import,
-    division,
-    print_function,
-    unicode_literals)
+from __future__ import absolute_import, division, print_function, unicode_literals
 from builtins import *
 
 import os
@@ -39,8 +35,9 @@ def apply_sensor_filter(spectra, normalised_response_function):
     """
 
     return np.dot(
-        normalised_response_function,
-        spectra) / normalised_response_function.sum(1)
+        normalised_response_function, spectra
+    ) / normalised_response_function.sum(1)
+
 
 def _validate_filter_dataframe(filter_dataframe):
     """ Internal function to validate a sensor filter data frame.
@@ -54,8 +51,7 @@ def _validate_filter_dataframe(filter_dataframe):
 
     wavelengths = filter_dataframe.index
 
-    # are the band-centre wavelengths strictly increasing?
-    if not strictly_increasing(wavelengths):
+    if not wavelengths.is_monotonic_increasing:
         return False
 
     # Are the wavelength spacings acceptable?
@@ -67,11 +63,13 @@ def _validate_filter_dataframe(filter_dataframe):
         return False
 
     # The dtype of every column needs to be a numpy-compatible number
-    if len(filter_dataframe.select_dtypes(include=[np.number]).columns) \
-       != len(filter_dataframe.columns):
+    if len(filter_dataframe.select_dtypes(include=[np.number]).columns) != len(
+        filter_dataframe.columns
+    ):
         return False
 
     return True
+
 
 def _normalise_dataframe(dataframe):
     """ Normalises the spectral bands in a dataframe.
@@ -90,10 +88,8 @@ def _normalise_dataframe(dataframe):
     # per-band normalisation
     return dataframe / dataframe.max()
 
-def load_sensor_filter_spectral_library(
-        directory,
-        base_filename,
-        normalise=False):
+
+def load_sensor_filter_spectral_library(directory, base_filename, normalise=False):
     """ Loads a single sensor filter from an ENVI spectral library.
 
     Args:
@@ -108,32 +104,35 @@ def load_sensor_filter_spectral_library(
     """
 
     base_filename = os.path.join(directory, base_filename)
-    file_pattern = '{0}.{1}'
+    file_pattern = "{0}.{1}"
 
     # load the spectral library
     try:
         spectral_library = envi.open(
-            file_pattern.format(base_filename, 'hdr'),
-            file_pattern.format(base_filename, 'lib'))
+            file_pattern.format(base_filename, "hdr"),
+            file_pattern.format(base_filename, "lib"),
+        )
     except spyfile.FileNotFoundError as exception:
         raise IOError(exception)
 
     # convert to a DataFrame
     dataframe = pd.DataFrame(
-        spectral_library.spectra.transpose(),
-        index=spectral_library.bands.centers)
-    dataframe.columns = ['Band {0}'.format(x+1)
-                         for x in range(len(dataframe.columns))]
+        spectral_library.spectra.transpose(), index=spectral_library.bands.centers
+    )
+    dataframe.columns = [
+        "Band {0}".format(x + 1) for x in range(len(dataframe.columns))
+    ]
 
     if not _validate_filter_dataframe(dataframe):
         raise DataValidationError(
-            'Spectral library {0} failed validation'.format(
-                base_filename))
+            "Spectral library {0} failed validation".format(base_filename)
+        )
 
     if normalise:
         dataframe = _normalise_dataframe(dataframe)
 
     return np.array(dataframe.index), dataframe.values.transpose()
+
 
 # TODO: option to clip the filters to a specific range of 1nm bands?
 def load_sensor_filters_excel(filename, normalise=False, sheet_names=None):
@@ -162,7 +161,9 @@ def load_sensor_filters_excel(filename, normalise=False, sheet_names=None):
 
         for sheet in sheet_names:
             try:
-                dataframe = excel_file.parse(sheet)  # the sheet as a DataFrame
+                dataframe = excel_file.parse(
+                    sheet, index_col=0
+                )  # the sheet as a DataFrame
                 # OK, we have the data frame. Let's process it...
                 if not _validate_filter_dataframe(dataframe):
                     continue
@@ -172,20 +173,18 @@ def load_sensor_filters_excel(filename, normalise=False, sheet_names=None):
 
                 sensor_filters[sheet] = (
                     np.array(dataframe.index),
-                    dataframe.values.transpose())
+                    dataframe.values.transpose(),
+                )
 
             except xlrd.biffh.XLRDError:
                 continue
             # except xlrd.biffh.XLRDError as xlrd_error:
-                # TODO: log warning about invalid sheet
+            # TODO: log warning about invalid sheet
 
     return sensor_filters
 
 
-def load_sensor_filters(
-        path,
-        normalise=False,
-        spectral_library_name_parser=None):
+def load_sensor_filters(path, normalise=False, spectral_library_name_parser=None):
     """" Loads all valid sensor filters from the given location.
 
     Args:
@@ -216,12 +215,12 @@ def load_sensor_filters(
 
     try:
         # excel files
-        for file in list_files(path, ['xls', 'xlsx']):
+        for file in list_files(path, ["xls", "xlsx"]):
             new_filters = load_sensor_filters_excel(file, normalise=normalise)
             merge_dictionary(sensor_filters, new_filters)
 
         # Spectral Libraries
-        for file in list_files(path, ['lib']):
+        for file in list_files(path, ["lib"]):
             base_name, _ = os.path.splitext(os.path.basename(file))
 
             if spectral_library_name_parser:
@@ -230,15 +229,14 @@ def load_sensor_filters(
                 name = base_name
 
             loaded_filter = load_sensor_filter_spectral_library(
-                path,
-                base_name,
-                normalise=normalise)
+                path, base_name, normalise=normalise
+            )
 
             if name not in sensor_filters:
                 sensor_filters[name] = loaded_filter
     except UnsupportedDataFormatError:
         pass
     # except UnsupportedDataFormatError as ex:
-        # TODO: logging.getLogger(__name__).exception(ex)
+    # TODO: logging.getLogger(__name__).exception(ex)
 
     return sensor_filters

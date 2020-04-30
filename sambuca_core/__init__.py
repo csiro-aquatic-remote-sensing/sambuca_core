@@ -4,7 +4,7 @@
 from .exceptions import (
     SambucaException,
     UnsupportedDataFormatError,
-    DataValidationError
+    DataValidationError,
 )
 from .forward_model import forward_model, ForwardModelResults
 from .sensor_filter import (
@@ -29,8 +29,8 @@ from .utility import (
     strictly_increasing,
 )
 
-__author__ = 'Daniel Collins'
-__email__ = 'daniel.collins@csiro.au'
+__author__ = "Daniel Collins"
+__email__ = "daniel.collins@csiro.au"
 
 # Versioning: major.minor.patch
 # major: increment on a major version. Must be changed when the API changes in
@@ -38,4 +38,4 @@ __email__ = 'daniel.collins@csiro.au'
 # minor: new functionality that does not break the
 # existing API.
 # patch: bug-fixes that do not change the public API
-__version__ = '1.3.3'
+__version__ = "1.3.4"

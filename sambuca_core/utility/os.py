@@ -33,8 +33,11 @@ def list_files(directory, extensions=None):
     """
 
     # Get the raw directory listing of matching files
-    file_list = [join(directory, normcase(f)) for f in listdir(directory) if
-                 isfile(join(directory, f))]
+    file_list = [
+        join(directory, normcase(f))
+        for f in listdir(directory)
+        if isfile(join(directory, f))
+    ]
 
     # if we have an extension filter, then apply it
     if extensions:

@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # Ensure compatibility of Python 2 with Python 3 constructs
-from __future__ import (
-    absolute_import,
-    division,
-    print_function,
-    unicode_literals)
+from __future__ import absolute_import, division, print_function, unicode_literals
 from builtins import *
 
 from pkg_resources import resource_filename
@@ -25,8 +21,8 @@ class TestForwardModel(object):
     def setup_class(cls):
         # load the test values
         filename = resource_filename(
-            sbc.__name__,
-            './tests/data/forward_model_test_data.sav')
+            sbc.__name__, "./tests/data/forward_model_test_data.sav"
+        )
         cls.data = readsav(filename)
         cls.unpack_parameters()
         cls.unpack_spectra()
@@ -81,8 +77,8 @@ class TestForwardModel(object):
     def unpack_substrates(cls):
         spectra = cls.data.sambuca.inputr[0].spectra[0]
         # it appears that in the test I set up, the substrates are both the same
-        cls.substrate1 = spectra[:,0]
-        cls.substrate2 = spectra[:,1]
+        cls.substrate1 = spectra[:, 0]
+        cls.substrate2 = spectra[:, 1]
 
     @classmethod
     def unpack_results(cls):
@@ -162,7 +158,8 @@ class TestForwardModel(object):
             self.a_water,
             self.a_ph_star,
             551,
-            substrate2=self.substrate2)
+            substrate2=self.substrate2,
+        )
 
         assert np.allclose(results.r_substratum, self.substrate1)
 
@@ -176,118 +173,84 @@ class TestForwardModel(object):
     def test_rrs(self):
         results = self.run_forward_model()
         assert np.allclose(
-            results.rrs,
-            self.expected_rrs,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.rrs, self.expected_rrs, atol=self.atol, rtol=self.rtol
+        )
 
     def test_rrs_deep(self):
         results = self.run_forward_model()
         assert np.allclose(
-            results.rrsdp,
-            self.expected_rrsdp,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.rrsdp, self.expected_rrsdp, atol=self.atol, rtol=self.rtol
+        )
 
     def test_r_0_minus(self):
         self.q_factor = 3.5123
         results = self.run_forward_model()
         expected_r_0_minus = results.rrs * self.q_factor
         assert np.allclose(
-            results.r_0_minus,
-            expected_r_0_minus,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.r_0_minus, expected_r_0_minus, atol=self.atol, rtol=self.rtol
+        )
 
     def test_r_0_minus_deep(self):
         self.q_factor = np.pi
         results = self.run_forward_model()
         expected_rdp_0_minus = results.rrsdp * self.q_factor
         assert np.allclose(
-            results.rdp_0_minus,
-            expected_rdp_0_minus,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.rdp_0_minus, expected_rdp_0_minus, atol=self.atol, rtol=self.rtol
+        )
 
     def test_kd(self):
         results = self.run_forward_model()
-        assert np.allclose(
-            results.kd,
-            self.expected_kd,
-            atol=self.atol,
-            rtol=self.rtol)
+        assert np.allclose(results.kd, self.expected_kd, atol=self.atol, rtol=self.rtol)
 
     def test_kub(self):
         results = self.run_forward_model()
         assert np.allclose(
-            results.kub,
-            self.expected_kub,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.kub, self.expected_kub, atol=self.atol, rtol=self.rtol
+        )
 
     def test_kuc(self):
         results = self.run_forward_model()
         assert np.allclose(
-            results.kuc,
-            self.expected_kuc,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.kuc, self.expected_kuc, atol=self.atol, rtol=self.rtol
+        )
 
     def test_a(self):
         results = self.run_forward_model()
-        assert np.allclose(
-            results.a,
-            self.expected_a,
-            atol=self.atol,
-            rtol=self.rtol)
+        assert np.allclose(results.a, self.expected_a, atol=self.atol, rtol=self.rtol)
 
     def test_bb(self):
         results = self.run_forward_model()
-        assert np.allclose(
-            results.bb,
-            self.expected_bb,
-            atol=self.atol,
-            rtol=self.rtol)
+        assert np.allclose(results.bb, self.expected_bb, atol=self.atol, rtol=self.rtol)
 
     def test_a_cdom_star(self):
         results = self.run_forward_model()
         assert np.allclose(
-            results.a_cdom_star,
-            self.a_cdom_star,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.a_cdom_star, self.a_cdom_star, atol=self.atol, rtol=self.rtol
+        )
 
     def test_a_nap_star(self):
         results = self.run_forward_model()
         assert np.allclose(
-            results.a_nap_star,
-            self.a_nap_star,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.a_nap_star, self.a_nap_star, atol=self.atol, rtol=self.rtol
+        )
 
     def test_bb_water(self):
         results = self.run_forward_model()
         assert np.allclose(
-            results.bb_water,
-            self.bb_water,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.bb_water, self.bb_water, atol=self.atol, rtol=self.rtol
+        )
 
     def test_bb_ph_star(self):
         results = self.run_forward_model()
         assert np.allclose(
-            results.bb_ph_star,
-            self.bb_ph_star,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.bb_ph_star, self.bb_ph_star, atol=self.atol, rtol=self.rtol
+        )
 
     def test_bb_nap_star(self):
         results = self.run_forward_model()
         assert np.allclose(
-            results.bb_nap_star,
-            self.bb_nap_star,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.bb_nap_star, self.bb_nap_star, atol=self.atol, rtol=self.rtol
+        )
 
     def test_a_ph(self):
         # Derive the phytoplankton absorption from the specific absorption
@@ -295,62 +258,44 @@ class TestForwardModel(object):
         # a_ph = chl * aphy*
         expected_a_ph = self.chl * self.a_ph_star
         results = self.run_forward_model()
-        assert np.allclose(
-            results.a_ph,
-            expected_a_ph)
+        assert np.allclose(results.a_ph, expected_a_ph)
 
     def test_a_cdom(self):
         # I don't have a_cdom data from IDL, but I know what it should be.
         # a_cdom = a_cdom* * cdom
         results = self.run_forward_model()
         expected_a_cdom = results.a_cdom_star * self.cdom
-        assert np.allclose(
-            results.a_cdom,
-            expected_a_cdom)
+        assert np.allclose(results.a_cdom, expected_a_cdom)
 
     def test_a_nap(self):
         # I don't have a_nap data from IDL, but I know what it should be.
         # a_nap = a_nap* * nap
         results = self.run_forward_model()
         expected_a_nap = results.a_nap_star * self.nap
-        assert np.allclose(
-            results.a_nap,
-            expected_a_nap)
+        assert np.allclose(results.a_nap, expected_a_nap)
 
     def test_bb_ph(self):
-         # expected bb_ph = bb_ph_star * chl
+        # expected bb_ph = bb_ph_star * chl
         expected_bb_ph = self.chl * self.bb_ph_star
         results = self.run_forward_model()
         assert np.allclose(
-            results.bb_ph,
-            expected_bb_ph,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.bb_ph, expected_bb_ph, atol=self.atol, rtol=self.rtol
+        )
 
     def test_bb_nap(self):
         # expected bb_nap = bb_nap_star * nap
         expected_bb_nap = self.nap * self.bb_nap_star
         results = self.run_forward_model()
         assert np.allclose(
-            results.bb_nap,
-            expected_bb_nap,
-            atol=self.atol,
-            rtol=self.rtol)
+            results.bb_nap, expected_bb_nap, atol=self.atol, rtol=self.rtol
+        )
 
     def test_total_absorption(self):
         results = self.run_forward_model()
         expected_a = self.a_water + results.a_ph + results.a_cdom + results.a_nap
-        assert np.allclose(
-            results.a,
-            expected_a,
-            atol=self.atol,
-            rtol=self.rtol)
+        assert np.allclose(results.a, expected_a, atol=self.atol, rtol=self.rtol)
 
     def test_total_backscatter(self):
         results = self.run_forward_model()
         expected_bb = results.bb_water + results.bb_ph + results.bb_nap
-        assert np.allclose(
-            results.bb,
-            expected_bb,
-            atol=self.atol,
-            rtol=self.rtol)
+        assert np.allclose(results.bb, expected_bb, atol=self.atol, rtol=self.rtol)

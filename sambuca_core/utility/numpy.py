@@ -34,6 +34,7 @@ def strictly_increasing(x):
     diffs = np.ediff1d(x)
     return np.all(diffs > 0)
 
+
 def strictly_decreasing(x):
     """ Tests if a 1D vector is strictly decreasing, where
     x[i+1] < x[i] for i in [0 .. len(x)].
@@ -46,4 +47,6 @@ def strictly_decreasing(x):
     """
     diffs = np.ediff1d(x)
     return np.all(diffs < 0)
+
+
 # pylint: enable=invalid-name
