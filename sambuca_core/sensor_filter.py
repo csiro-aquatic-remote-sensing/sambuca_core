@@ -162,7 +162,7 @@ def load_sensor_filters_excel(filename, normalise=False, sheet_names=None):
 
         for sheet in sheet_names:
             try:
-                dataframe = excel_file.parse(sheet)  # the sheet as a DataFrame
+                dataframe = excel_file.parse(sheet, index_col=0)  # the sheet as a DataFrame
                 # OK, we have the data frame. Let's process it...
                 if not _validate_filter_dataframe(dataframe):
                     continue
